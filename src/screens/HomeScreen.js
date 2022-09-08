@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
-import { Icon, Stack, Button, Spacer, Text, Box } from '@react-native-material/core';
-import { Spinner, PromptComponent } from '@app/components';
+import { Stack, Button, Spacer, Text, Box } from '@react-native-material/core';
 import { COLORS } from '@app/constants/ColorConstants';
 import Slider from '@react-native-community/slider';
 

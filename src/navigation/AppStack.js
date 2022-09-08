@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AppProvider } from '@app/contexts/AppContext';
-import { GameScreen, LoadingScreen, HomeScreen } from '@app/screens';
+import { GameScreen, HomeScreen } from '@app/screens';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -13,10 +13,7 @@ const NavigationStack = () => {
       <AppProvider>
         <Navigator screenOptions={{ headerShown: false }}>
           <Screen name="home" component={HomeScreen} />
-
           <Screen name="game" component={GameScreen} />
-
-          <Screen name="loading" component={LoadingScreen} />
         </Navigator>
       </AppProvider>
     </NavigationContainer>

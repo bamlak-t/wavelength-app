@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, TouchableHighlight, Dimensions, Animated } from 'react-native';
-import { Box } from '@react-native-material/core';
+import React from 'react';
+import { Dimensions } from 'react-native';
 import { COLORS } from '@app/constants/ColorConstants';
 import { ANGLE_RANGE } from '@app/constants/CommonConstants';
 import CircleSlider from './CircleSlider';
@@ -11,7 +10,7 @@ const customWidth = width * 0.95;
 const customHeight = customWidth / 2;
 
 const Spinner = () => {
-  const { currentTeam, setCurrentTeam, wlTarget, getWlTarget, choice } = useTeam();
+  const { wlTarget, choice } = useTeam();
 
   const handleSpinnerChange = (value) => {
     if (0 <= value && value <= 180) {
