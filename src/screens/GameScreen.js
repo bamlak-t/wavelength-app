@@ -1,7 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, ImageBackground, Animated, Dimensions } from 'react-native';
-import { useUser } from '@app/contexts/AppContext';
-import { Stack, Button, Spacer, Text, Box, useBoolean } from '@react-native-material/core';
+import { useTeam } from '@app/contexts/AppContext';
+import {
+  Stack,
+  Button,
+  Spacer,
+  Text,
+  Box,
+  useBoolean,
+  Icon,
+  HStack,
+} from '@react-native-material/core';
 import { Spinner, PromptComponent, CoverComponent } from '@app/components';
 import { COLORS } from '@app/constants/ColorConstants';
 
@@ -10,24 +19,40 @@ const customWidth = width * 0.95;
 const customHeight = customWidth / 2;
 
 const Screen = ({ route, navigation }) => {
-  const { currentTeam, setCurrentTeam } = useUser();
+  const { currentTeam, setCurrentTeam, wlTarget, getWlTarget, choice } = useTeam();
   const { maxPoints } = route.params;
   const [showWL, setShowWL] = useBoolean(false);
+  const rotateAngle = useRef(new Animated.Value(0));
+
+  const [teamPhase, setTeamPhase] = useBoolean(false);
+  const [enemyTeam, setEnemyTeam] = useBoolean(false);
+  const [gameOver, setGameOver] = useBoolean(false);
+
+  const [teamScores, setTeamScores] = useState({ teamA: 0, teamB: 0 });
+  const [closeness, setCloseness] = useState(0);
+  const [shouldBe, setShouldBe] = useState(0);
+
+  const POINTS = {
+    MAX: 3,
+    MID: 1,
+    MIN: 0,
+  };
   const showWLDuration = 5000;
   const showTransDuration = 1000;
-
-  const rotateAngle = useRef(new Animated.Value(0.5));
-  const showWLTimer = useRef(new Animated.Value(showWLDuration));
 
   const spin = rotateAngle.current.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
-  console.log('maxPoints', maxPoints);
+  useEffect(() => {
+    console.log('teamScores', teamScores);
+    console.log('closeness', closeness);
+    console.log('shouldBe', shouldBe);
+  }, [teamScores, closeness, shouldBe]);
 
-  const mapTeamName = (bool) => {
-    return bool ? 'Team 2' : 'Team 1';
+  const mapTeamName = () => {
+    return currentTeam ? 'Team 1' : 'Team 2';
   };
 
   const goBackToHome = () => {
@@ -37,21 +62,74 @@ const Screen = ({ route, navigation }) => {
   useEffect(() => {
     Animated.timing(rotateAngle.current, {
       toValue: showWL ? 0.5 : 0,
+      // toValue: 0.5,
       duration: showTransDuration,
       useNativeDriver: true,
     }).start();
   }, [showWL]);
 
   const handleReady = () => {
+    getWlTarget();
     setShowWL.toggle();
 
-    Animated.timing(showWLTimer.current, {
-      toValue: 0,
-      duration: showWLDuration,
-      useNativeDriver: true,
-    }).start(() => {
+    setTimeout(() => {
       setShowWL.toggle();
-    });
+      setTeamPhase.toggle();
+    }, showWLDuration);
+  };
+
+  const calculateCloseness = () => {
+    console.log('choice', choice.current);
+    console.log('wlTarget', wlTarget);
+    const result = Math.abs(choice.current - wlTarget);
+    console.log('result', result);
+    setCloseness(result);
+    if (result <= 20) {
+      return true;
+    }
+    if (wlTarget > choice.current) {
+      setShouldBe('higher');
+    } else {
+      setShouldBe('lower');
+    }
+
+    return false;
+  };
+
+  const getPoints = (result) => {
+    if (result <= 10) {
+      return POINTS.MAX;
+    } else if (result <= 20) {
+      return POINTS.MID;
+    } else {
+      return POINTS.MIN;
+    }
+  };
+
+  const givePoints = (enemy = false) => {
+    const points = enemy ? POINTS.MID : getPoints(closeness);
+    const team = currentTeam && !enemy ? 'teamA' : 'teamB';
+    const newPoints = teamScores[team] + points;
+    if (teamScores[team] > maxPoints) {
+      setGameOver.toggle();
+    }
+    setTeamScores({ ...teamScores, [team]: newPoints });
+    setCurrentTeam.toggle();
+    setTeamPhase.toggle();
+  };
+
+  const handleDone = () => {
+    const close = calculateCloseness();
+    if (!close) {
+      setEnemyTeam.toggle();
+    } else {
+      givePoints();
+    }
+  };
+
+  const handleEnemyTeamSelect = (guess) => {
+    givePoints(guess === shouldBe);
+    setEnemyTeam.toggle();
   };
 
   return (
@@ -62,7 +140,7 @@ const Screen = ({ route, navigation }) => {
     >
       <Stack fill spacing={5} style={styles.background}>
         <Text variant="h2" style={styles.teamName}>
-          {mapTeamName(currentTeam)}
+          {mapTeamName()}
         </Text>
         <Box w={customWidth} h={customHeight} m={4} style={styles.spinner}>
           <Box w={'100%'} h={customWidth} m={4} style={styles.semiCircle}>
@@ -73,15 +151,42 @@ const Screen = ({ route, navigation }) => {
           </Box>
         </Box>
         <Stack m={40} center>
-          <Box w={230} h={70} style={styles.readyBtnBg}>
-            <Button
-              title={showWL ? 'Done' : 'Ready'}
-              color={COLORS.white}
-              onPress={handleReady}
-              style={styles.readyBtn}
-              titleStyle={styles.readyBtnText}
-            />
-          </Box>
+          {enemyTeam ? (
+            <HStack spacing={50}>
+              <Box w={130} h={100} style={styles.lower}>
+                <Button
+                  title="Lower"
+                  color={COLORS.white}
+                  onPress={() => handleEnemyTeamSelect('lower')}
+                  style={styles.enemyTeamSelectBtn}
+                  titleStyle={styles.readyBtnText}
+                />
+              </Box>
+              <Box w={130} h={100} style={styles.higher}>
+                <Button
+                  title="Higher"
+                  color={COLORS.white}
+                  onPress={() => handleEnemyTeamSelect('higher')}
+                  style={styles.enemyTeamSelectBtn}
+                  titleStyle={styles.enemyTeamSelectText}
+                />
+              </Box>
+            </HStack>
+          ) : (
+            <Box w={230} h={70} style={styles.readyBtnBg}>
+              {showWL ? (
+                <Icon name="clock" size={50} color="white" />
+              ) : (
+                <Button
+                  title={teamPhase ? 'Done' : 'Ready'}
+                  color={COLORS.white}
+                  onPress={teamPhase ? handleDone : handleReady}
+                  style={styles.readyBtn}
+                  titleStyle={styles.enemyTeamSelectText}
+                />
+              )}
+            </Box>
+          )}
         </Stack>
         <Stack m={30} center>
           <PromptComponent />
@@ -139,5 +244,24 @@ const styles = StyleSheet.create({
   },
   readyBtnText: {
     fontSize: 20,
+  },
+  lower: {
+    backgroundColor: COLORS.darkRed,
+    justifyContent: 'center',
+    borderRadius: 20,
+    padding: 10,
+  },
+  higher: {
+    backgroundColor: COLORS.darkBlue,
+    justifyContent: 'center',
+    borderRadius: 20,
+    padding: 10,
+  },
+  enemyTeamSelectBtn: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  enemyTeamSelectText: {
+    fontSize: 15,
   },
 });

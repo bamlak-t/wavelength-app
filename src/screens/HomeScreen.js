@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
-import { useUser } from '@app/contexts/AppContext';
 import { Icon, Stack, Button, Spacer, Text, Box } from '@react-native-material/core';
 import { Spinner, PromptComponent } from '@app/components';
 import { COLORS } from '@app/constants/ColorConstants';
