@@ -5,8 +5,6 @@ import { COLORS } from '@app/constants/ColorConstants';
 import { PROMPT_BANK } from '@app/constants/PromptBank';
 
 const Component = () => {
-  console.log('PROMPT_BANK', PROMPT_BANK);
-
   const randIdx = Math.floor(Math.random() * PROMPT_BANK.length);
   const prompt = PROMPT_BANK[randIdx];
 
@@ -15,10 +13,10 @@ const Component = () => {
   return (
     <Box w={300} h={150} p={20} style={styles.container}>
       <HStack spacing={10} style={styles.prompt} divider={true} dividerStyle={styles.divider}>
-        <Text style={styles.promptText} variant="h3">
+        <Text style={styles.promptText} variant="h4">
           {prompt[0]}
         </Text>
-        <Text style={styles.promptText} variant="h3">
+        <Text style={styles.promptText} variant="h4">
           {prompt[1]}
         </Text>
       </HStack>
