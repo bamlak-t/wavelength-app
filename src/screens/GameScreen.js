@@ -95,7 +95,7 @@ const Screen = ({ route, navigation }) => {
   };
 
   const givePoints = (enemy = false) => {
-    const points = 5; //enemy ? POINTS.MID : getPoints(closeness.current);
+    const points = enemy ? POINTS.MID : getPoints(closeness.current);
     const current = enemy ? !currentTeam : currentTeam;
     const team = current ? 'teamA' : 'teamB';
     const newPoints = teamScores[team] + points;
