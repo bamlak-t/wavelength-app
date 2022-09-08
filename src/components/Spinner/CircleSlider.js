@@ -87,7 +87,7 @@ const CircleSlider = ({
       />
       <Line
         x1={'50%'}
-        y1={'51%'}
+        y1={'55%'}
         x2={wlTargetLine.x}
         y2={wlTargetLine.y}
         stroke={'orange'}

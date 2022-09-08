@@ -1,22 +1,19 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, HStack, Box, Divider } from '@react-native-material/core';
+import { Text, HStack, Box } from '@react-native-material/core';
 import { COLORS } from '@app/constants/ColorConstants';
-import { PROMPT_BANK } from '@app/constants/PromptBank';
 
-const Component = () => {
-  const randIdx = Math.floor(Math.random() * PROMPT_BANK.length);
-  const prompt = PROMPT_BANK[randIdx];
-
+const Component = ({ props }) => {
+  const { prompt } = props;
   console.log('prompt', prompt);
 
   return (
-    <Box w={300} h={150} p={20} style={styles.container}>
+    <Box w={300} h={120} p={20} style={styles.container}>
       <HStack spacing={10} style={styles.prompt} divider={true} dividerStyle={styles.divider}>
-        <Text style={styles.promptText} variant="h4">
+        <Text style={styles.promptText} variant="h5">
           {prompt[0]}
         </Text>
-        <Text style={styles.promptText} variant="h4">
+        <Text style={styles.promptText} variant="h5">
           {prompt[1]}
         </Text>
       </HStack>

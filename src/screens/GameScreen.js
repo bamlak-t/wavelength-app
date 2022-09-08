@@ -11,8 +11,9 @@ import {
   Icon,
   HStack,
 } from '@react-native-material/core';
-import { Spinner, PromptComponent, CoverComponent } from '@app/components';
+import { Spinner, PromptComponent, CoverComponent, ProgressComponent } from '@app/components';
 import { COLORS } from '@app/constants/ColorConstants';
+import { PROMPT_BANK } from '@app/constants/PromptBank';
 
 const { width } = Dimensions.get('window');
 const customWidth = width * 0.95;
@@ -23,14 +24,15 @@ const Screen = ({ route, navigation }) => {
   const { maxPoints } = route.params;
   const [showWL, setShowWL] = useBoolean(false);
   const rotateAngle = useRef(new Animated.Value(0));
+  const closeness = useRef(0);
 
   const [teamPhase, setTeamPhase] = useBoolean(false);
   const [enemyTeam, setEnemyTeam] = useBoolean(false);
   const [gameOver, setGameOver] = useBoolean(false);
 
   const [teamScores, setTeamScores] = useState({ teamA: 0, teamB: 0 });
-  const [closeness, setCloseness] = useState(0);
   const [shouldBe, setShouldBe] = useState(0);
+  const [prompt, setPrompt] = useState(['', '']);
 
   const POINTS = {
     MAX: 3,
@@ -47,7 +49,7 @@ const Screen = ({ route, navigation }) => {
 
   useEffect(() => {
     console.log('teamScores', teamScores);
-    console.log('closeness', closeness);
+    console.log('closeness', closeness.current);
     console.log('shouldBe', shouldBe);
   }, [teamScores, closeness, shouldBe]);
 
@@ -59,31 +61,12 @@ const Screen = ({ route, navigation }) => {
     navigation.navigate('home');
   };
 
-  useEffect(() => {
-    Animated.timing(rotateAngle.current, {
-      toValue: showWL ? 0.5 : 0,
-      // toValue: 0.5,
-      duration: showTransDuration,
-      useNativeDriver: true,
-    }).start();
-  }, [showWL]);
-
-  const handleReady = () => {
-    getWlTarget();
-    setShowWL.toggle();
-
-    setTimeout(() => {
-      setShowWL.toggle();
-      setTeamPhase.toggle();
-    }, showWLDuration);
-  };
-
   const calculateCloseness = () => {
     console.log('choice', choice.current);
     console.log('wlTarget', wlTarget);
     const result = Math.abs(choice.current - wlTarget);
     console.log('result', result);
-    setCloseness(result);
+    closeness.current = result;
     if (result <= 20) {
       return true;
     }
@@ -92,7 +75,6 @@ const Screen = ({ route, navigation }) => {
     } else {
       setShouldBe('lower');
     }
-
     return false;
   };
 
@@ -107,8 +89,10 @@ const Screen = ({ route, navigation }) => {
   };
 
   const givePoints = (enemy = false) => {
-    const points = enemy ? POINTS.MID : getPoints(closeness);
-    const team = currentTeam && !enemy ? 'teamA' : 'teamB';
+    const points = enemy ? POINTS.MID : getPoints(closeness.current);
+    const current = enemy ? !currentTeam : currentTeam;
+    const team = current ? 'teamA' : 'teamB';
+    console.log('BIGPRINT', teamScores, team, points);
     const newPoints = teamScores[team] + points;
     if (teamScores[team] > maxPoints) {
       setGameOver.toggle();
@@ -118,8 +102,35 @@ const Screen = ({ route, navigation }) => {
     setTeamPhase.toggle();
   };
 
+  const getNewPrompt = () => {
+    setPrompt(PROMPT_BANK[Math.floor(Math.random() * PROMPT_BANK.length)]);
+  };
+
+  useEffect(() => {
+    Animated.timing(rotateAngle.current, {
+      toValue: showWL ? 0.5 : 0,
+      duration: showTransDuration,
+      useNativeDriver: true,
+    }).start();
+  }, [showWL]);
+
+  useEffect(() => {
+    getNewPrompt();
+  }, [currentTeam]);
+
+  const handleReady = () => {
+    getWlTarget();
+    setShowWL.toggle();
+
+    setTimeout(() => {
+      setShowWL.toggle();
+      setTeamPhase.toggle();
+    }, showWLDuration);
+  };
+
   const handleDone = () => {
     const close = calculateCloseness();
+    console.log('close', close);
     if (!close) {
       setEnemyTeam.toggle();
     } else {
@@ -139,6 +150,18 @@ const Screen = ({ route, navigation }) => {
       style={styles.image}
     >
       <Stack fill spacing={5} style={styles.background}>
+        <ProgressComponent
+          props={{
+            progress: Math.round((teamScores.teamA / maxPoints) * 100),
+            fillColor: COLORS.darkRed,
+          }}
+        />
+        <ProgressComponent
+          props={{
+            progress: Math.round((teamScores.teamB / maxPoints) * 100),
+            fillColor: COLORS.darkBlue,
+          }}
+        />
         <Text variant="h2" style={styles.teamName}>
           {mapTeamName()}
         </Text>
@@ -189,7 +212,7 @@ const Screen = ({ route, navigation }) => {
           )}
         </Stack>
         <Stack m={30} center>
-          <PromptComponent />
+          <PromptComponent props={{ prompt }} />
         </Stack>
         <Spacer />
         <Button title="Back" color={COLORS.white} onPress={goBackToHome} />
