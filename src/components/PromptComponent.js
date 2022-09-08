@@ -5,7 +5,6 @@ import { COLORS } from '@app/constants/ColorConstants';
 
 const Component = ({ props }) => {
   const { prompt } = props;
-  console.log('prompt', prompt);
 
   return (
     <Box w={300} h={120} p={20} style={styles.container}>
