@@ -8,7 +8,6 @@ const Screen = ({ navigation }) => {
   const [maxPoints, setMaxPoints] = useState(0);
 
   const handleStartGame = () => {
-    console.log('start game');
     navigation.navigate('game', { maxPoints });
   };
 
