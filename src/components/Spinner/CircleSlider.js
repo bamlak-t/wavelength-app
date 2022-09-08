@@ -14,6 +14,7 @@ const CircleSlider = ({
   right = 359,
   xCenter = Dimensions.get('window').width / 2,
   yCenter = Dimensions.get('window').height / 2,
+  wlTargetAngle = 180,
   onValueChange = (x) => x,
 }) => {
   const [angle, setAngle] = useState(value);
@@ -72,6 +73,7 @@ const CircleSlider = ({
   const bR = btnRadius;
   const dR = dialRadius;
   var endCoord = polarToCartesian(angle);
+  const wlTargetLine = polarToCartesian(wlTargetAngle);
 
   return (
     <Svg width={width} height={width}>
@@ -82,6 +84,14 @@ const CircleSlider = ({
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         fill={fillColor}
+      />
+      <Line
+        x1={'50%'}
+        y1={'51%'}
+        x2={wlTargetLine.x}
+        y2={wlTargetLine.y}
+        stroke={'orange'}
+        strokeWidth="20"
       />
       <Line
         x1={'50%'}
@@ -100,3 +110,4 @@ const CircleSlider = ({
 };
 
 export default React.memo(CircleSlider);
+// export default CircleSlider;
