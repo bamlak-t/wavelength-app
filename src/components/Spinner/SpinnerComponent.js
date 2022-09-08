@@ -15,16 +15,6 @@ const ANGLERANGE = {
 
 const Spinner = () => {
   const choice = useRef();
-  // const rotateAngle = useRef(new Animated.Value(0));
-  // Animated.timing(rotateAngle.current, {
-  //   toValue: 1,
-  //   duration: 5000,
-  //   useNativeDriver: true,
-  // }).start();
-  // const spin = rotateAngle.current.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: ['0deg', '360deg'],
-  // });
 
   const handleSpinnerChange = (value) => {
     if (0 <= value && value <= 180) {
@@ -32,44 +22,24 @@ const Spinner = () => {
     } else {
       choice.current = value < 270 ? 270 : value - 269;
     }
+    console.log('choice', choice.current);
   };
 
   return (
-    <Box w={customWidth} h={customHeight} m={4} style={styles.spinner}>
-      <Box w={'100%'} h={customWidth} m={4} style={styles.semiCircle}>
-        <CircleSlider
-          value={0}
-          dialRadius={customHeight - 20}
-          btnRadius={20}
-          onValueChange={handleSpinnerChange}
-          left={ANGLERANGE.min}
-          right={ANGLERANGE.max}
-          fillColor={COLORS.white}
-        />
-      </Box>
-    </Box>
+    <CircleSlider
+      value={0}
+      dialRadius={customHeight - 20}
+      btnRadius={20}
+      onValueChange={handleSpinnerChange}
+      left={ANGLERANGE.min}
+      right={ANGLERANGE.max}
+      fillColor={COLORS.white}
+    />
   );
 };
 
 export default Spinner;
 
 const styles = StyleSheet.create({
-  spinner: {
-    backgroundColor: COLORS.transparent,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  semiCircle: {
-    backgroundColor: COLORS.mainRed,
-    borderColor: COLORS.white,
-    borderRadius: customHeight,
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    alignItems: 'center',
-  },
-  slider: {
-    transform: [{ rotate: '-90deg' }],
-    dialRadius: customWidth,
-  },
+  test: {},
 });
