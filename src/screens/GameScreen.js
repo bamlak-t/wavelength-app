@@ -11,7 +11,13 @@ import {
   Icon,
   HStack,
 } from '@react-native-material/core';
-import { Spinner, PromptComponent, CoverComponent, ProgressComponent } from '@app/components';
+import {
+  Spinner,
+  PromptComponent,
+  CoverComponent,
+  ProgressComponent,
+  GameOverComponent,
+} from '@app/components';
 import { COLORS } from '@app/constants/ColorConstants';
 import { PROMPT_BANK } from '@app/constants/PromptBank';
 
@@ -39,7 +45,7 @@ const Screen = ({ route, navigation }) => {
     MID: 1,
     MIN: 0,
   };
-  const showWLDuration = 5000;
+  const showWLDuration = 3000;
   const showTransDuration = 1000;
 
   const spin = rotateAngle.current.interpolate({
@@ -89,13 +95,13 @@ const Screen = ({ route, navigation }) => {
   };
 
   const givePoints = (enemy = false) => {
-    const points = enemy ? POINTS.MID : getPoints(closeness.current);
+    const points = 5; //enemy ? POINTS.MID : getPoints(closeness.current);
     const current = enemy ? !currentTeam : currentTeam;
     const team = current ? 'teamA' : 'teamB';
-    console.log('BIGPRINT', teamScores, team, points);
     const newPoints = teamScores[team] + points;
-    if (teamScores[team] > maxPoints) {
+    if (newPoints >= maxPoints) {
       setGameOver.toggle();
+      return;
     }
     setTeamScores({ ...teamScores, [team]: newPoints });
     setCurrentTeam.toggle();
@@ -149,6 +155,9 @@ const Screen = ({ route, navigation }) => {
       resizeMode="cover"
       style={styles.image}
     >
+      <GameOverComponent
+        props={{ gameOver, winningTeam: mapTeamName(), handleStartAgain: goBackToHome }}
+      />
       <Stack fill spacing={5} style={styles.background}>
         <ProgressComponent
           props={{
