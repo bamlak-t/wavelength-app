@@ -31,7 +31,7 @@ const Screen = ({ navigation }) => {
         </Text>
         <Slider
           style={styles.pointSlider}
-          minimumValue={0}
+          minimumValue={5}
           maximumValue={15}
           minimumTrackTintColor={COLORS.white}
           maximumTrackTintColor={COLORS.black}
