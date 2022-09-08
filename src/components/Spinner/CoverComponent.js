@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Animated, Dimensions, ImageBackground } from 'react-native';
 import { Button, Surface, Text, TextInput, VStack, Switch } from '@react-native-material/core';
 import { withAnchorPoint } from 'react-native-anchor-point';
-import { COLORS } from '../../constants/ColorConstants';
 
 const { width } = Dimensions.get('window');
 const customWidth = width * 0.95;
@@ -10,12 +9,6 @@ const customHeight = customWidth / 2;
 
 const Component = ({ props, children }) => {
   const { rotateValue } = props;
-
-  console.log(rotateValue, customWidth, customHeight, children);
-
-  useEffect(() => {
-    console.log(rotateValue, customWidth, customHeight);
-  }, []);
 
   const getTransform = () => {
     let transform = {
