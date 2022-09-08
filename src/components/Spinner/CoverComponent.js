@@ -1,33 +1,56 @@
-// import React, { useEffect } from 'react';
-// import { StyleSheet, Animated } from 'react-native';
-// import { Button, Surface, Text, TextInput, VStack, Switch } from '@react-native-material/core';
-// import { withAnchorPoint } from 'react-native-anchor-point';
-// import { COLORS } from '../../constants/ColorConstants';
+import React, { useEffect } from 'react';
+import { StyleSheet, Animated, Dimensions, ImageBackground } from 'react-native';
+import { Button, Surface, Text, TextInput, VStack, Switch } from '@react-native-material/core';
+import { withAnchorPoint } from 'react-native-anchor-point';
+import { COLORS } from '../../constants/ColorConstants';
 
-// const Component = ({ props }) => {
-//   const { rotateValue, width, height } = props;
+const { width } = Dimensions.get('window');
+const customWidth = width * 0.95;
+const customHeight = customWidth / 2;
 
-//   useEffect(() => {
-//     console.log(rotateValue, width, height);
-//   }, []);
+const Component = ({ props, children }) => {
+  const { rotateValue } = props;
 
-//   const getTransform = () => {
-//     let transform = {
-//       transform: [{ perspective: 400 }, { rotateZ: rotateValue }],
-//     };
-//     return withAnchorPoint(transform, { x: 0.5, y: 1 }, { width, height });
-//   };
+  console.log(rotateValue, customWidth, customHeight, children);
 
-//   return <Animated.View style={[styles.arrow, getTransform()]} />;
-// };
+  useEffect(() => {
+    console.log(rotateValue, customWidth, customHeight);
+  }, []);
 
-// export default Component;
+  const getTransform = () => {
+    let transform = {
+      transform: [{ perspective: 400 }, { rotateZ: rotateValue }],
+    };
+    return withAnchorPoint(transform, { x: 0.5, y: 1 }, { customWidth, customHeight });
+  };
 
-// const styles = StyleSheet.create({
-//   arrow: {
-//     flex: 1,
-//     backgroundColor: COLORS.black,
-//     width: 20,
-//     alignSelf: 'center',
-//   },
-// });
+  return (
+    <Animated.View style={[styles.cover, getTransform()]}>
+      <ImageBackground
+        source={require('@app/assets/images/main-bg1.jpg')}
+        resizeMode="cover"
+        style={styles.image}
+      >
+        {children}
+      </ImageBackground>
+    </Animated.View>
+  );
+};
+
+export default Component;
+
+const styles = StyleSheet.create({
+  cover: {
+    // flex: 1,
+    width: customWidth,
+    height: customWidth,
+    alignSelf: 'center',
+    borderRadius: customHeight,
+    overflow: 'hidden',
+  },
+  image: {
+    height: customHeight,
+    width: customWidth,
+    // justifyContent: 'center',
+  },
+});
