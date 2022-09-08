@@ -53,12 +53,6 @@ const Screen = ({ route, navigation }) => {
     outputRange: ['0deg', '360deg'],
   });
 
-  useEffect(() => {
-    console.log('teamScores', teamScores);
-    console.log('closeness', closeness.current);
-    console.log('shouldBe', shouldBe);
-  }, [teamScores, closeness, shouldBe]);
-
   const mapTeamName = () => {
     return currentTeam ? 'Team 1' : 'Team 2';
   };
@@ -68,10 +62,7 @@ const Screen = ({ route, navigation }) => {
   };
 
   const calculateCloseness = () => {
-    console.log('choice', choice.current);
-    console.log('wlTarget', wlTarget);
     const result = Math.abs(choice.current - wlTarget);
-    console.log('result', result);
     closeness.current = result;
     if (result <= 20) {
       return true;
@@ -136,7 +127,6 @@ const Screen = ({ route, navigation }) => {
 
   const handleDone = () => {
     const close = calculateCloseness();
-    console.log('close', close);
     if (!close) {
       setEnemyTeam.toggle();
     } else {
