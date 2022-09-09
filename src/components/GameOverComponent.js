@@ -22,7 +22,7 @@ const Component = ({ props }) => {
         <Surface elevation={5} category="medium" style={styles.container}>
           <VStack fill spacing={5} divider={true} m={4} style={styles.message}>
             <Icon name="trophy" size={customWidth / 2} color="gold" />
-            <Text variant="h5" style={styles.title}>
+            <Text variant="h4" style={styles.title}>
               {winningTeam} won!
             </Text>
             <Button
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   againBtn: {
     width: customWidth / 2,

@@ -31,8 +31,8 @@ const Component = ({ props }) => {
               title="Close"
               color={COLORS.darkRed}
               onPress={() => setShowScores.toggle()}
-              style={styles.againBtn}
-              titleStyle={styles.againText}
+              style={styles.showBtn}
+              titleStyle={styles.showText}
             />
           </VStack>
         </Surface>
@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  againBtn: {
+  showBtn: {
     width: customWidth / 2,
     height: 50,
     justifyContent: 'center',
   },
-  againText: {
+  showText: {
     color: COLORS.white,
     fontSize: 20,
   },
