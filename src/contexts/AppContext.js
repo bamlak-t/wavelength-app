@@ -22,7 +22,15 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ currentTeam, setCurrentTeam, wlTarget, getWlTarget, choice }}>
+    <AppContext.Provider
+      value={{
+        currentTeam,
+        setCurrentTeam,
+        wlTarget,
+        getWlTarget,
+        choice,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

@@ -9,10 +9,10 @@ const Component = ({ props }) => {
   return (
     <Box w={300} h={120} p={20} style={styles.container}>
       <HStack spacing={10} style={styles.prompt} divider={true} dividerStyle={styles.divider}>
-        <Text style={styles.promptText} variant="h5">
+        <Text style={styles.promptText} variant="h6">
           {prompt[0]}
         </Text>
-        <Text style={styles.promptText} variant="h5">
+        <Text style={styles.promptText} variant="h6">
           {prompt[1]}
         </Text>
       </HStack>
@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: COLORS.black,
     textAlign: 'center',
+    adjustsFontSizeToFit: true,
+    numebrOfLines: 1,
   },
   divider: {
     color: COLORS.black,

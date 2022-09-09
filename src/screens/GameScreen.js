@@ -17,6 +17,7 @@ import {
   CoverComponent,
   ProgressComponent,
   GameOverComponent,
+  ShowScoresComponent,
 } from '@app/components';
 import { COLORS } from '@app/constants/ColorConstants';
 import { PROMPT_BANK } from '@app/constants/PromptBank';
@@ -35,10 +36,12 @@ const Screen = ({ route, navigation }) => {
   const [teamPhase, setTeamPhase] = useBoolean(false);
   const [enemyTeam, setEnemyTeam] = useBoolean(false);
   const [gameOver, setGameOver] = useBoolean(false);
+  const [showScores, setShowScores] = useBoolean(false);
 
   const [teamScores, setTeamScores] = useState({ teamA: 0, teamB: 0 });
   const [shouldBe, setShouldBe] = useState(0);
   const [prompt, setPrompt] = useState(['', '']);
+  const [scoreUpdate, setScoreUpdate] = useState({ points: 0, team: true });
 
   const POINTS = {
     MAX: 3,
@@ -54,7 +57,11 @@ const Screen = ({ route, navigation }) => {
   });
 
   const mapTeamName = () => {
-    return currentTeam ? 'Team 1' : 'Team 2';
+    return currentTeam ? 'Team A' : 'Team B';
+  };
+
+  const keyToTeamName = (key) => {
+    return key === 'teamA' ? 'Team A' : 'Team B';
   };
 
   const goBackToHome = () => {
@@ -94,7 +101,9 @@ const Screen = ({ route, navigation }) => {
       setGameOver.toggle();
       return;
     }
+    setScoreUpdate({ points, team: keyToTeamName(team) });
     setTeamScores({ ...teamScores, [team]: newPoints });
+    setShowScores.toggle();
     setCurrentTeam.toggle();
     setTeamPhase.toggle();
   };
@@ -146,8 +155,14 @@ const Screen = ({ route, navigation }) => {
       style={styles.image}
     >
       <GameOverComponent
-        props={{ gameOver, winningTeam: mapTeamName(), handleStartAgain: goBackToHome }}
+        props={{
+          gameOver: gameOver,
+          winningTeam: mapTeamName(),
+          handleStartAgain: goBackToHome,
+        }}
       />
+      {!gameOver && <ShowScoresComponent props={{ showScores, setShowScores, scoreUpdate }} />}
+
       <Stack fill spacing={5} style={styles.background}>
         <ProgressComponent
           props={{
@@ -169,7 +184,6 @@ const Screen = ({ route, navigation }) => {
             <CoverComponent props={{ rotateValue: spin }}>
               <Spinner />
             </CoverComponent>
-            {/* {showWL ? <Spinner /> : <CoverComponent props={{ rotateValue: spin }} />} */}
           </Box>
         </Box>
         <Stack m={40} center>
@@ -197,11 +211,11 @@ const Screen = ({ route, navigation }) => {
           ) : (
             <Box w={230} h={70} style={styles.readyBtnBg}>
               {showWL ? (
-                <Icon name="clock" size={50} color="white" />
+                <Icon name="clock" size={50} color={COLORS.mainRed} />
               ) : (
                 <Button
                   title={teamPhase ? 'Done' : 'Ready'}
-                  color={COLORS.white}
+                  color={COLORS.darkBlue}
                   onPress={teamPhase ? handleDone : handleReady}
                   style={styles.readyBtn}
                   titleStyle={styles.enemyTeamSelectText}
@@ -254,7 +268,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   readyBtnBg: {
-    backgroundColor: COLORS.mainRed,
+    backgroundColor: COLORS.white,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

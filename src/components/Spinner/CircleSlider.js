@@ -87,7 +87,7 @@ const CircleSlider = ({
       />
       <Line
         x1={'50%'}
-        y1={'55%'}
+        y1={'50%'}
         x2={wlTargetLine.x}
         y2={wlTargetLine.y}
         stroke={'orange'}
@@ -101,6 +101,7 @@ const CircleSlider = ({
         stroke={'black'}
         strokeWidth="10"
       />
+      <Circle r={30} cx={width / 2} cy={width / 2} fill={meterColor} />
       <G x={endCoord.x - bR} y={endCoord.y - bR}>
         <Circle r={bR} cx={bR} cy={bR} fill={meterColor} {...panResponder.panHandlers} />
       </G>
