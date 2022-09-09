@@ -1,4 +1,4 @@
-package com.peer_support_app.newarchitecture.components;
+package com.wavelength_clone.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

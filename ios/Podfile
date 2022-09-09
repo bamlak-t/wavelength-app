@@ -6,7 +6,7 @@ install! 'cocoapods', :deterministic_uuids => false
 
 production = ENV["PRODUCTION"] == "1"
 
-target 'peer_support_app' do
+target 'WavelengthTake' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -23,7 +23,7 @@ target 'peer_support_app' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'peer_support_appTests' do
+  target 'WavelengthTakeTests' do
     inherit! :complete
     # Pods for testing
   end

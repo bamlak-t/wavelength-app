@@ -1,5 +1,5 @@
 {
-  "name": "peer_support_app",
+  "name": "WavelengthTake",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "react-native": "^0.70.0",
     "react-native-anchor-point": "^1.0.6",
     "react-native-cli": "^2.0.1",
+    "react-native-rename": "^2.9.0",
     "react-native-safe-area-context": "^4.3.3",
     "react-native-screens": "^3.17.0",
     "react-native-svg": "^13.1.0",

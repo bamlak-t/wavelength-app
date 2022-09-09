@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface peer_support_appTests : XCTestCase
+@interface WavelengthTakeTests : XCTestCase
 
 @end
 
-@implementation peer_support_appTests
+@implementation WavelengthTakeTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

@@ -1,4 +1,4 @@
-package com.peer_support_app.newarchitecture.modules;
+package com.wavelength_clone.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

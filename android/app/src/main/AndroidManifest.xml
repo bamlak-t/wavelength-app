@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.peer_support_app">
+  package="com.wavelength_clone">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
